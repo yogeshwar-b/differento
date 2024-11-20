@@ -1,16 +1,3 @@
-export const sourceText: string = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Nunc malesuada tortor vel orci tincidunt, in pulvinar mi pellentesque.
+export const sourceText: string = `<ul><li>Hello world this is</li><li>jhgewt7ew</li><li>degw7fdvew</li><li>ediwufdvew</li><li>'jdiwefvdjew</li></ul>`
 
-Mauris ullamcorper tellus non metus aliquet gravida.
-Suspendisse eu turpis lobortis, semper dolor fringilla, ornare urna.
-Praesent vel augue sed est mattis condimentum.
-Pellentesque vitae libero gravida, dictum mi quis, hendrerit dui.`
-
-export const targetText: string = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Nunc malesuada tortor vel orci tincidunt, in pulvinar mi pellentesque.
-
-Mauris ullamcorper tellus non metus aliquet gravida.
-Suspendisse eu turpis lobortis, semper dolor fringilla, ornare urna.
-Praesent vel augue sed est mattis condimentum.
-Pellentesque vitae libero gravida, dictum mi quis, hendrerit dui.`
+export const targetText: string = `<ul><li>Hello world this is</li><li>test</li><li>test1</li><li>test2</li><li>'test3</li></ul>`
