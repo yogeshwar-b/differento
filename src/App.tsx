@@ -1,27 +1,21 @@
-import { ForwardedRef, forwardRef, useRef, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
-import { sourceText, targetText } from '../constants'
+import { sourceText as sText, targetText as tText } from '../constants'
 import { longestCommonSubsequence } from './helper'
 
 function App() {
   const [compareStatus, setCompareStatus] = useState('No Action')
-  const sourceTextRef = useRef<HTMLTextAreaElement>(null)
-  const targetTextRef = useRef<HTMLTextAreaElement>(null)
+  const [sourceText, setSourceText] = useState<string>(sText)
+  const [targetText, setTargetText] = useState<string>(tText)
   return (
     <>
       <h1>Differento 🕵️‍♀️🕵️‍♂️</h1>
-      <TextBox text={sourceText} name='source' ref={sourceTextRef} />
-      <TextBox text={targetText} name='target' ref={targetTextRef} />
+      <TextBox text={sourceText} name='source' setText={setSourceText} />
+      <TextBox text={targetText} name='target' setText={setTargetText} />
       <button
         onClick={() => {
-          console.log(sourceTextRef.current?.value.split('\n').length)
-          console.log(targetTextRef.current?.value.split('\n').length)
           setCompareStatus(
-            'LCS is - ' +
-              longestCommonSubsequence(
-                sourceTextRef.current?.value!,
-                targetTextRef.current?.value!
-              )
+            'LCS is - ' + longestCommonSubsequence(sourceText, targetText)
           )
         }}
       >
@@ -31,10 +25,7 @@ function App() {
       {compareStatus == 'No Action' ? (
         <></>
       ) : (
-        <DifferntoComparitor
-          source={sourceTextRef.current?.value!}
-          target={targetTextRef.current?.value!}
-        />
+        <DifferntoComparitor source={sourceText} target={targetText} />
       )}
     </>
   )
@@ -43,23 +34,22 @@ function App() {
 interface TextBoxProps {
   name: string
   text: string
+  setText: (text: string) => void
 }
-const TextBox = forwardRef(
-  ({ name, text }: TextBoxProps, ref: ForwardedRef<HTMLTextAreaElement>) => {
-    const [textState, setTextState] = useState(text)
-    return (
-      <div>
-        <textarea
-          value={textState}
-          name={name}
-          id=''
-          ref={ref}
-          onChange={(e) => setTextState(e.target.value)}
-        ></textarea>
-      </div>
-    )
-  }
-)
+const TextBox = ({ name, text, setText }: TextBoxProps) => {
+  return (
+    <div>
+      <textarea
+        value={text}
+        name={name}
+        id=''
+        onChange={(e) => setText(e.target.value)}
+        rows={text.split('\n').length}
+        cols={100}
+      ></textarea>
+    </div>
+  )
+}
 
 interface DifferentoComparitorProps {
   source: string
