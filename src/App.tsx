@@ -67,43 +67,53 @@ interface DifferentoComparitorProps {
 }
 const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
   const lcs: string = longestCommonSubsequence(source, target)
-  console.log(source.split('\n'), lcs.split('\n'))
-  var sourceidx = -1
-  var lcsidx = 0
-  var targetidx = -1
-  var lcsidx2 = 0
+
   return (
     <div>
-      {Array.from(source).map((letter) => {
-        sourceidx++
-        if (source[sourceidx] == lcs[lcsidx]) {
-          lcsidx++
-          return <p style={{ display: 'inline' }}>{letter}</p>
-        } else {
-          return (
-            <p style={{ display: 'inline', backgroundColor: 'red' }}>
-              {letter}
-            </p>
-          )
-        }
-      })}
-      <br />
-      {Array.from(target).map((letter) => {
-        targetidx++
-        if (target[targetidx] == lcs[lcsidx2]) {
-          lcsidx2++
-          return <p style={{ display: 'inline' }}>{letter}</p>
-        } else {
-          return (
-            <p style={{ display: 'inline', backgroundColor: 'green' }}>
-              {letter}
-            </p>
-          )
-        }
-      })}
-      <p>Comparitor</p>
+      <LineView source={source} lcs={lcs} backgroundcolor='red'></LineView>
+      <LineView source={target} lcs={lcs} backgroundcolor='green'></LineView>
     </div>
   )
+}
+
+interface LineViewProps {
+  source: string
+  lcs: string
+  backgroundcolor: string
+}
+const LineView = ({ source, lcs, backgroundcolor }: LineViewProps) => {
+  var sourceidx = 0
+  var lcsidx = 0
+  console.log(`got source ${source} lcs ${lcs}`)
+  const rows = []
+  while (sourceidx < source.length) {
+    console.log(` something print - ${sourceidx}`)
+    var lineseen = false
+    const temp = []
+    while (sourceidx < source.length) {
+      if (source[sourceidx] != '\n' && source[sourceidx] == lcs[lcsidx]) {
+        lineseen = true
+        temp.push(<p style={{ display: 'inline' }}>{source[sourceidx]}</p>)
+        lcsidx++
+      } else {
+        if (source[sourceidx] == '\n') {
+          if (lineseen) {
+            lcsidx++
+          }
+          sourceidx++
+          break
+        }
+        temp.push(
+          <p style={{ display: 'inline', backgroundColor: backgroundcolor }}>
+            {source[sourceidx]}
+          </p>
+        )
+      }
+      sourceidx++
+    }
+    rows.push(<div>{temp}</div>)
+  }
+  return <p>{rows}</p>
 }
 
 export default App
