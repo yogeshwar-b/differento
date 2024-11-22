@@ -4,29 +4,16 @@ import { sourceText as sText, targetText as tText } from '../constants'
 import { longestCommonSubsequence } from './helper'
 
 function App() {
-  const [compareStatus, setCompareStatus] = useState('No Action')
   const [sourceText, setSourceText] = useState<string>(sText)
   const [targetText, setTargetText] = useState<string>(tText)
   return (
     <>
       <h1>Differento 🕵️‍♀️🕵️‍♂️</h1>
-      <TextBox text={sourceText} name='source' setText={setSourceText} />
-      <TextBox text={targetText} name='target' setText={setTargetText} />
-      <button
-        onClick={() => {
-          setCompareStatus(
-            'LCS is - ' + longestCommonSubsequence(sourceText, targetText)
-          )
-        }}
-      >
-        Compare
-      </button>
-      <p>{compareStatus}</p>
-      {compareStatus == 'No Action' ? (
-        <></>
-      ) : (
-        <DifferntoComparitor source={sourceText} target={targetText} />
-      )}
+      <div style={{ display: 'flex' }}>
+        <TextBox text={sourceText} name='source' setText={setSourceText} />
+        <TextBox text={targetText} name='target' setText={setTargetText} />
+      </div>
+      <DifferntoComparitor source={sourceText} target={targetText} />
     </>
   )
 }
@@ -44,7 +31,7 @@ const TextBox = ({ name, text, setText }: TextBoxProps) => {
         name={name}
         id=''
         onChange={(e) => setText(e.target.value)}
-        rows={text.split('\n').length}
+        rows={Math.min(30, text.split('\n').length)}
         cols={100}
       ></textarea>
     </div>
@@ -59,7 +46,13 @@ const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
   const lcs: string = longestCommonSubsequence(source, target)
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center'
+      }}
+    >
       <LineView
         source={source}
         lcs={lcs}
@@ -90,21 +83,27 @@ const LineView = ({
 }: LineViewProps) => {
   var sourceidx = 0
   var lcsidx = 0
-  console.log(`got source ${source} lcs ${lcs}`)
   const rows = []
   while (sourceidx < source.length) {
-    console.log(` something print - ${sourceidx}`)
     var lineseen = false
     var changeseen = false
     const temp = []
     while (sourceidx < source.length) {
       if (source[sourceidx] != '\n' && source[sourceidx] == lcs[lcsidx]) {
         lineseen = true
-        temp.push(<p style={{ display: 'inline' }}>{source[sourceidx]}</p>)
+        temp.push(
+          <p
+            id={String(sourceidx)}
+            key={String(sourceidx)}
+            style={{ display: 'inline' }}
+          >
+            {source[sourceidx]}
+          </p>
+        )
         lcsidx++
       } else {
         if (source[sourceidx] == '\n') {
-          if (lineseen) {
+          if (lineseen || lcs[lcsidx] == '\n') {
             lcsidx++
           }
           sourceidx++
@@ -112,7 +111,11 @@ const LineView = ({
         }
         changeseen = true
         temp.push(
-          <p style={{ display: 'inline', backgroundColor: backgroundColor }}>
+          <p
+            id={String(sourceidx)}
+            key={String(sourceidx)}
+            style={{ display: 'inline', backgroundColor: backgroundColor }}
+          >
             {source[sourceidx]}
           </p>
         )
@@ -139,7 +142,11 @@ const LineView = ({
       </div>
     )
   }
-  return <p>{rows}</p>
+  return (
+    <div style={{ marginRight: 'auto', width: '100%', paddingLeft: '.5rem' }}>
+      {rows}
+    </div>
+  )
 }
 
 export default App
