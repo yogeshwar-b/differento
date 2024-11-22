@@ -60,8 +60,18 @@ const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
 
   return (
     <div>
-      <LineView source={source} lcs={lcs} backgroundcolor='red'></LineView>
-      <LineView source={target} lcs={lcs} backgroundcolor='green'></LineView>
+      <LineView
+        source={source}
+        lcs={lcs}
+        backgroundColor='red'
+        changedLineColor='orange'
+      ></LineView>
+      <LineView
+        source={target}
+        lcs={lcs}
+        backgroundColor='green'
+        changedLineColor='lightgreen'
+      ></LineView>
     </div>
   )
 }
@@ -69,9 +79,15 @@ const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
 interface LineViewProps {
   source: string
   lcs: string
-  backgroundcolor: string
+  backgroundColor: string
+  changedLineColor: string
 }
-const LineView = ({ source, lcs, backgroundcolor }: LineViewProps) => {
+const LineView = ({
+  source,
+  lcs,
+  backgroundColor,
+  changedLineColor
+}: LineViewProps) => {
   var sourceidx = 0
   var lcsidx = 0
   console.log(`got source ${source} lcs ${lcs}`)
@@ -79,6 +95,7 @@ const LineView = ({ source, lcs, backgroundcolor }: LineViewProps) => {
   while (sourceidx < source.length) {
     console.log(` something print - ${sourceidx}`)
     var lineseen = false
+    var changeseen = false
     const temp = []
     while (sourceidx < source.length) {
       if (source[sourceidx] != '\n' && source[sourceidx] == lcs[lcsidx]) {
@@ -93,15 +110,34 @@ const LineView = ({ source, lcs, backgroundcolor }: LineViewProps) => {
           sourceidx++
           break
         }
+        changeseen = true
         temp.push(
-          <p style={{ display: 'inline', backgroundColor: backgroundcolor }}>
+          <p style={{ display: 'inline', backgroundColor: backgroundColor }}>
             {source[sourceidx]}
           </p>
         )
       }
       sourceidx++
     }
-    rows.push(<div>{temp}</div>)
+
+    rows.push(
+      <div style={{ position: 'relative' }}>
+        {changeseen ? (
+          <div
+            style={{
+              zIndex: '-1',
+              backgroundColor: changedLineColor,
+              position: 'absolute',
+              height: '100%',
+              width: '100%'
+            }}
+          ></div>
+        ) : (
+          <div></div>
+        )}
+        <div>{temp}</div>
+      </div>
+    )
   }
   return <p>{rows}</p>
 }
