@@ -32,7 +32,7 @@ const TextBox = ({ name, text, setText }: TextBoxProps) => {
         id=''
         onChange={(e) => setText(e.target.value)}
         rows={Math.min(30, text.split('\n').length)}
-        cols={100}
+        cols={40}
       ></textarea>
     </div>
   )
@@ -92,13 +92,12 @@ const LineView = ({
       if (source[sourceidx] != '\n' && source[sourceidx] == lcs[lcsidx]) {
         lineseen = true
         temp.push(
-          <p
+          <span
             id={String(sourceidx)}
             key={String(sourceidx)}
-            style={{ display: 'inline' }}
           >
             {source[sourceidx]}
-          </p>
+          </span>
         )
         lcsidx++
       } else {
@@ -111,13 +110,13 @@ const LineView = ({
         }
         changeseen = true
         temp.push(
-          <p
+          <span
             id={String(sourceidx)}
             key={String(sourceidx)}
-            style={{ display: 'inline', backgroundColor: backgroundColor }}
+            style={{ backgroundColor: backgroundColor }}
           >
             {source[sourceidx]}
-          </p>
+          </span>
         )
       }
       sourceidx++
