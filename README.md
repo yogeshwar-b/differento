@@ -2,13 +2,6 @@
 
 Simple Web app that compares the text files offline.
 
-## Tech used
+Inspired By Git implementation. 
 
-- ReactJs
-- Bun
-
-## To Run
-
-```
-bun run dev
-```
+[!Image](./gif/differento.gif)
