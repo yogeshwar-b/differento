@@ -25,16 +25,14 @@ interface TextBoxProps {
 }
 const TextBox = ({ name, text, setText }: TextBoxProps) => {
   return (
-    <div>
-      <textarea
-        value={text}
-        name={name}
-        id=''
-        onChange={(e) => setText(e.target.value)}
-        rows={Math.min(30, text.split('\n').length)}
-        cols={40}
-      ></textarea>
-    </div>
+    <textarea
+      value={text}
+      name={name}
+      id=''
+      onChange={(e) => setText(e.target.value)}
+      rows={Math.min(30, text.split('\n').length)}
+      cols={40}
+    ></textarea>
   )
 }
 
@@ -81,21 +79,18 @@ const LineView = ({
   backgroundColor,
   changedLineColor
 }: LineViewProps) => {
-  var sourceidx = 0
-  var lcsidx = 0
+  let sourceidx = 0
+  let lcsidx = 0
   const rows = []
   while (sourceidx < source.length) {
-    var lineseen = false
-    var changeseen = false
+    let lineseen = false
+    let changeseen = false
     const temp = []
     while (sourceidx < source.length) {
       if (source[sourceidx] != '\n' && source[sourceidx] == lcs[lcsidx]) {
         lineseen = true
         temp.push(
-          <span
-            id={String(sourceidx)}
-            key={String(sourceidx)}
-          >
+          <span id={String(sourceidx)} key={String(sourceidx)}>
             {source[sourceidx]}
           </span>
         )
