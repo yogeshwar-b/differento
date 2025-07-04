@@ -3,18 +3,30 @@ import './App.css'
 import { sourceText as sText, targetText as tText } from '../constants'
 import { longestCommonSubsequence } from './helper'
 
+const colorMap: Record<string, string> = {
+  'bg-red-200': 'bg-red-200',
+  'bg-green-200': 'bg-green-200',
+  'bg-blue-200': 'bg-blue-200',
+  'bg-yellow-200': 'bg-yellow-200',
+  'bg-red-500': 'bg-red-500',
+  'bg-green-500': 'bg-green-500'
+  // add more as needed
+}
+
 function App() {
   const [sourceText, setSourceText] = useState<string>(sText)
   const [targetText, setTargetText] = useState<string>(tText)
   return (
-    <>
+    <div className='bg-gradient-to-r from-white-200 to-gray-100 h-screen'>
       <h1>Differento 🕵️‍♀️🕵️‍♂️</h1>
-      <div style={{ display: 'flex' }}>
-        <TextBox text={sourceText} name='source' setText={setSourceText} />
-        <TextBox text={targetText} name='target' setText={setTargetText} />
+      <div className='max-w-8/10  mx-auto margin-left-0'>
+        <div className='flex'>
+          <TextBox text={sourceText} name='source' setText={setSourceText} />
+          <TextBox text={targetText} name='target' setText={setTargetText} />
+        </div>
+        <DifferentoComparitor source={sourceText} target={targetText} />
       </div>
-      <DifferntoComparitor source={sourceText} target={targetText} />
-    </>
+    </div>
   )
 }
 
@@ -30,8 +42,8 @@ const TextBox = ({ name, text, setText }: TextBoxProps) => {
       name={name}
       id=''
       onChange={(e) => setText(e.target.value)}
-      rows={Math.min(30, text.split('\n').length)}
-      cols={40}
+      rows={Math.min(20, text.split('\n').length)}
+      className='resize-none flex-1 border-2 border-gray-300 rounded-md p-2 m-2 '
     ></textarea>
   )
 }
@@ -40,28 +52,25 @@ interface DifferentoComparitorProps {
   source: string
   target: string
 }
-const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
+const DifferentoComparitor = ({
+  source,
+  target
+}: DifferentoComparitorProps) => {
   const lcs: string = longestCommonSubsequence(source, target)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center'
-      }}
-    >
+    <div className='flex flex-row justify-center mt-2'>
       <LineView
         source={source}
         lcs={lcs}
-        backgroundColor='red'
-        changedLineColor='orange'
+        txtBackgroundColor={colorMap['bg-red-500']}
+        changedLineColor={colorMap['bg-red-200']}
       ></LineView>
       <LineView
         source={target}
         lcs={lcs}
-        backgroundColor='green'
-        changedLineColor='lightgreen'
+        txtBackgroundColor={colorMap['bg-green-500']}
+        changedLineColor={colorMap['bg-green-200']}
       ></LineView>
     </div>
   )
@@ -70,13 +79,13 @@ const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
 interface LineViewProps {
   source: string
   lcs: string
-  backgroundColor: string
+  txtBackgroundColor: string
   changedLineColor: string
 }
 const LineView = ({
   source,
   lcs,
-  backgroundColor,
+  txtBackgroundColor: backgroundColor,
   changedLineColor
 }: LineViewProps) => {
   let sourceidx = 0
@@ -108,7 +117,7 @@ const LineView = ({
           <span
             id={String(sourceidx)}
             key={String(sourceidx)}
-            style={{ backgroundColor: backgroundColor }}
+            className={backgroundColor}
           >
             {source[sourceidx]}
           </span>
@@ -118,29 +127,19 @@ const LineView = ({
     }
 
     rows.push(
-      <div style={{ position: 'relative' }}>
+      <div className='relative'>
         {changeseen ? (
           <div
-            style={{
-              zIndex: '-1',
-              backgroundColor: changedLineColor,
-              position: 'absolute',
-              height: '100%',
-              width: '100%'
-            }}
+            className={changedLineColor + ' h-full w-full absolute z-0'}
           ></div>
         ) : (
           <div></div>
         )}
-        <div>{temp}</div>
+        <div className='relative z-2'>{temp}</div>
       </div>
     )
   }
-  return (
-    <div style={{ marginRight: 'auto', width: '100%', paddingLeft: '.5rem' }}>
-      {rows}
-    </div>
-  )
+  return <div className='mr-auto w-full pl-2'>{rows}</div>
 }
 
 export default App
