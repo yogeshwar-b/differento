@@ -1,20 +1,30 @@
 import { useState } from 'react'
-import './App.css'
 import { sourceText as sText, targetText as tText } from '../constants'
 import { longestCommonSubsequence } from './helper'
 
+const colorMap: Record<string, string> = {
+  'bg-red-200': 'bg-red-200',
+  'bg-green-200': 'bg-green-200',
+  'bg-blue-200': 'bg-blue-200',
+  'bg-yellow-200': 'bg-yellow-200',
+  'bg-red-500': 'bg-red-500',
+  'bg-red-400': 'bg-red-400',
+  'bg-green-500': 'bg-green-500'
+}
 function App() {
   const [sourceText, setSourceText] = useState<string>(sText)
   const [targetText, setTargetText] = useState<string>(tText)
   return (
-    <>
-      <h1>Differento 🕵️‍♀️🕵️‍♂️</h1>
-      <div style={{ display: 'flex' }}>
-        <TextBox text={sourceText} name='source' setText={setSourceText} />
-        <TextBox text={targetText} name='target' setText={setTargetText} />
+    <div className='bg-gradient-to-r from-white-200 to-gray-100 h-screen'>
+      <h1 className='text-4xl font-bold text-center my-6'>Differento 🕵️‍♀️🕵️‍♂️</h1>
+      <div className='max-w-8/10  mx-auto margin-left-0'>
+        <div className='flex'>
+          <TextBox text={sourceText} name='source' setText={setSourceText} />
+          <TextBox text={targetText} name='target' setText={setTargetText} />
+        </div>
+        <DifferentoComparitor source={sourceText} target={targetText} />
       </div>
-      <DifferntoComparitor source={sourceText} target={targetText} />
-    </>
+    </div>
   )
 }
 
@@ -25,16 +35,14 @@ interface TextBoxProps {
 }
 const TextBox = ({ name, text, setText }: TextBoxProps) => {
   return (
-    <div>
-      <textarea
-        value={text}
-        name={name}
-        id=''
-        onChange={(e) => setText(e.target.value)}
-        rows={Math.min(30, text.split('\n').length)}
-        cols={40}
-      ></textarea>
-    </div>
+    <textarea
+      value={text}
+      name={name}
+      id=''
+      onChange={(e) => setText(e.target.value)}
+      rows={Math.min(20, text.split('\n').length)}
+      className='resize-none flex-1 border-2 border-gray-300 rounded-md p-2 m-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+    ></textarea>
   )
 }
 
@@ -42,28 +50,25 @@ interface DifferentoComparitorProps {
   source: string
   target: string
 }
-const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
+const DifferentoComparitor = ({
+  source,
+  target
+}: DifferentoComparitorProps) => {
   const lcs: string = longestCommonSubsequence(source, target)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center'
-      }}
-    >
+    <div className='cursor-default select-none flex flex-row justify-center mt-2'>
       <LineView
         source={source}
         lcs={lcs}
-        backgroundColor='red'
-        changedLineColor='orange'
+        txtBackgroundColor={colorMap['bg-red-400']}
+        changedLineColor={colorMap['bg-red-200']}
       ></LineView>
       <LineView
         source={target}
         lcs={lcs}
-        backgroundColor='green'
-        changedLineColor='lightgreen'
+        txtBackgroundColor={colorMap['bg-green-500']}
+        changedLineColor={colorMap['bg-green-200']}
       ></LineView>
     </div>
   )
@@ -72,30 +77,27 @@ const DifferntoComparitor = ({ source, target }: DifferentoComparitorProps) => {
 interface LineViewProps {
   source: string
   lcs: string
-  backgroundColor: string
+  txtBackgroundColor: string
   changedLineColor: string
 }
 const LineView = ({
   source,
   lcs,
-  backgroundColor,
+  txtBackgroundColor: backgroundColor,
   changedLineColor
 }: LineViewProps) => {
-  var sourceidx = 0
-  var lcsidx = 0
+  let sourceidx = 0
+  let lcsidx = 0
   const rows = []
   while (sourceidx < source.length) {
-    var lineseen = false
-    var changeseen = false
+    let lineseen = false
+    let changeseen = false
     const temp = []
     while (sourceidx < source.length) {
       if (source[sourceidx] != '\n' && source[sourceidx] == lcs[lcsidx]) {
         lineseen = true
         temp.push(
-          <span
-            id={String(sourceidx)}
-            key={String(sourceidx)}
-          >
+          <span id={String(sourceidx)} key={String(sourceidx)}>
             {source[sourceidx]}
           </span>
         )
@@ -113,7 +115,7 @@ const LineView = ({
           <span
             id={String(sourceidx)}
             key={String(sourceidx)}
-            style={{ backgroundColor: backgroundColor }}
+            className={backgroundColor}
           >
             {source[sourceidx]}
           </span>
@@ -123,29 +125,31 @@ const LineView = ({
     }
 
     rows.push(
-      <div style={{ position: 'relative' }}>
+      <div className='relative'>
         {changeseen ? (
           <div
-            style={{
-              zIndex: '-1',
-              backgroundColor: changedLineColor,
-              position: 'absolute',
-              height: '100%',
-              width: '100%'
-            }}
+            className={
+              changedLineColor + ' h-full w-full absolute z-0 rounded-md'
+            }
           ></div>
         ) : (
-          <div></div>
+          <div
+            className={'bg-gray-100 h-full w-full absolute z-0 rounded-md'}
+          ></div>
         )}
-        <div>{temp}</div>
+        <div
+          className={
+            'relative z-2' +
+            (rows.length == 0 ? ' border-t-1 ' : '') +
+            ' border-b-1 border-gray-300 rounded-md pl-1'
+          }
+        >
+          {temp}
+        </div>
       </div>
     )
   }
-  return (
-    <div style={{ marginRight: 'auto', width: '100%', paddingLeft: '.5rem' }}>
-      {rows}
-    </div>
-  )
+  return <div className='mr-auto w-full pl-2'>{rows}</div>
 }
 
 export default App
