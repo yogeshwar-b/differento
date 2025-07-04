@@ -1,17 +1,18 @@
-export const sourceText: string = `<ul>
-  <li>Hello world this is</li>
-  <li>test</li>
-  <li>degw7fdvew</li>
-  <li>ediwufdvew</li>
-  <li>'jdiwefvdjew</li>
+export const sourceText: string = `Old File
+<ul>
+  <li>Hello world this is 2025</li>
+  <li>Apple🍎</li>
+  <li>Orange</li>
+  <li>Peach🍑</li>
+  <li>mango🥭</li>
 </ul>
 `
-export const targetText: string = `<ul>
-  <li>Hello world this is</li>
-  fasdf
-  <li>test</li>
-  <li>test1</li>
-  <li>test2</li>
-  <li>'test3</li>
+export const targetText: string = `New File
+<ul>
+  <li>Hello world this is 2026</li>
+  <li>Apple🍎</li>
+  <li>Orange🍊</li>
+  <li>Peach</li>
+  <li>Mango</li>
 </ul>
 `

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './App.css'
 import { sourceText as sText, targetText as tText } from '../constants'
 import { longestCommonSubsequence } from './helper'
 
@@ -9,16 +8,15 @@ const colorMap: Record<string, string> = {
   'bg-blue-200': 'bg-blue-200',
   'bg-yellow-200': 'bg-yellow-200',
   'bg-red-500': 'bg-red-500',
+  'bg-red-400': 'bg-red-400',
   'bg-green-500': 'bg-green-500'
-  // add more as needed
 }
-
 function App() {
   const [sourceText, setSourceText] = useState<string>(sText)
   const [targetText, setTargetText] = useState<string>(tText)
   return (
     <div className='bg-gradient-to-r from-white-200 to-gray-100 h-screen'>
-      <h1>Differento 🕵️‍♀️🕵️‍♂️</h1>
+      <h1 className='text-4xl font-bold text-center my-6'>Differento 🕵️‍♀️🕵️‍♂️</h1>
       <div className='max-w-8/10  mx-auto margin-left-0'>
         <div className='flex'>
           <TextBox text={sourceText} name='source' setText={setSourceText} />
@@ -43,7 +41,7 @@ const TextBox = ({ name, text, setText }: TextBoxProps) => {
       id=''
       onChange={(e) => setText(e.target.value)}
       rows={Math.min(20, text.split('\n').length)}
-      className='resize-none flex-1 border-2 border-gray-300 rounded-md p-2 m-2 '
+      className='resize-none flex-1 border-2 border-gray-300 rounded-md p-2 m-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
     ></textarea>
   )
 }
@@ -59,11 +57,11 @@ const DifferentoComparitor = ({
   const lcs: string = longestCommonSubsequence(source, target)
 
   return (
-    <div className='flex flex-row justify-center mt-2'>
+    <div className='cursor-default select-none flex flex-row justify-center mt-2'>
       <LineView
         source={source}
         lcs={lcs}
-        txtBackgroundColor={colorMap['bg-red-500']}
+        txtBackgroundColor={colorMap['bg-red-400']}
         changedLineColor={colorMap['bg-red-200']}
       ></LineView>
       <LineView
@@ -130,12 +128,24 @@ const LineView = ({
       <div className='relative'>
         {changeseen ? (
           <div
-            className={changedLineColor + ' h-full w-full absolute z-0'}
+            className={
+              changedLineColor + ' h-full w-full absolute z-0 rounded-md'
+            }
           ></div>
         ) : (
-          <div></div>
+          <div
+            className={'bg-gray-100 h-full w-full absolute z-0 rounded-md'}
+          ></div>
         )}
-        <div className='relative z-2'>{temp}</div>
+        <div
+          className={
+            'relative z-2' +
+            (rows.length == 0 ? ' border-t-1 ' : '') +
+            ' border-b-1 border-gray-300 rounded-md pl-1'
+          }
+        >
+          {temp}
+        </div>
       </div>
     )
   }

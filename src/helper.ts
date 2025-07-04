@@ -2,12 +2,10 @@ export function longestCommonSubsequence(str1: string, str2: string): string {
   const m: number = str1.length
   const n: number = str2.length
 
-  // Create DP table
   const dp: number[][] = Array.from({ length: m + 1 }, () =>
     new Array(n + 1).fill(0)
   )
 
-  // Build LCS table
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       if (str1[i - 1] === str2[j - 1]) {
@@ -18,7 +16,6 @@ export function longestCommonSubsequence(str1: string, str2: string): string {
     }
   }
 
-  // Reconstruct the subsequence
   let lcs: string = ''
   let i: number = m,
     j: number = n
